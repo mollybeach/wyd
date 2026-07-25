@@ -1,3 +1,8 @@
+# macOS
+.DS_Store
+
 # LingCode / Cursor agent artifacts
 .lingcode/
 .cursor/skills/brainstorm/
+wydiOS/.cursor/skills/brainstorm/SKILL.md
+wydiOS/.cursor/skills/ship-ios-app/SKILL.md
