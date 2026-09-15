@@ -4,6 +4,8 @@
 
 Built at **ETHGlobal Lisbon 2026** as a native SwiftUI iOS app.
 
+**🌐 [mollybeach.github.io/wyd](https://mollybeach.github.io/wyd/)**
+
 <!-- Add screenshots to docs/ and link them here -->
 
 ---
