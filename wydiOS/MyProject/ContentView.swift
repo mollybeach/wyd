@@ -17,19 +17,29 @@ struct ContentView: View {
 }
 
 struct MainTabView: View {
+    @State private var tab = 0
+    @AppStorage(WYDClock.enabledKey) private var conferenceMode = WYDClock.isConferenceMode
+
     var body: some View {
-        TabView {
+        TabView(selection: $tab) {
             ConciergeView()
                 .tabItem { Label("wyd?", systemImage: "bubble.left.and.bubble.right.fill") }
+                .tag(0)
             EventMapView()
                 .tabItem { Label("Map", systemImage: "map.fill") }
+                .tag(1)
             EventsView()
                 .tabItem { Label("Events", systemImage: "calendar") }
+                .tag(2)
             CirclesView()
                 .tabItem { Label("Circles", systemImage: "person.2.fill") }
+                .tag(3)
             ProfileView()
                 .tabItem { Label("You", systemImage: "person.crop.circle.fill") }
+                .tag(4)
         }
+        // Switching clocks changes every time-based query, so rebuild the tabs to reload.
+        .id(conferenceMode)
     }
 }
 
