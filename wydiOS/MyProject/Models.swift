@@ -52,7 +52,10 @@ struct Circle: Identifiable, Decodable {
 struct CircleMember: Decodable {
     let circleId: UUID
     let userId: UUID
-    let sharingLevel: String
+    var shareBusy: Bool
+    var sharePublicEvents: Bool
+    var shareApproxLocation: Bool
+    var shareLiveLocation: Bool
 }
 
 struct WYDEvent: Identifiable, Decodable {
@@ -152,26 +155,6 @@ struct MyCalendarEvent: Identifiable, Decodable {
     let externalUid: String?
 }
 
-// MARK: - Sharing levels
-
-enum SharingLevel: String, CaseIterable, Identifiable {
-    case busy
-    case publicEvents = "public_events"
-    case approxLocation = "approx_location"
-    case liveLocation = "live_location"
-
-    var id: String { rawValue }
-
-    var label: String {
-        switch self {
-        case .busy: return "Free / Busy"
-        case .publicEvents: return "Public Events"
-        case .approxLocation: return "Approximate Location"
-        case .liveLocation: return "Live Location"
-        }
-    }
-}
-
 // MARK: - Event category helpers
 
 import SwiftUI
@@ -230,7 +213,7 @@ extension Date {
     }
 
     var wydRelative: String {
-        let now = Date()
+        let now = WYDClock.now
         if self < now { return "now" }
         let interval = self.timeIntervalSince(now)
         let hours = Int(interval / 3600)
