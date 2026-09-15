@@ -107,7 +107,7 @@ struct EventsView: View {
         do {
             async let recsTask = APIClient.shared.rpc(
                 "wyd_recommend",
-                args: ["p_user": userID.uuidString, "p_now": Date().wydISOString, "p_limit": 50],
+                args: ["p_user": userID.uuidString, "p_now": WYDClock.now.wydISOString, "p_limit": 50],
                 as: Recommendation.self)
             async let rsvpsTask = APIClient.shared.select(
                 "rsvps", filter: ["user_id": userID.uuidString], as: RSVP.self)
