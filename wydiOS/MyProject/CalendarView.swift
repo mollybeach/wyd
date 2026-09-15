@@ -1,10 +1,13 @@
 import SwiftUI
 
 /// Day timeline with positioned time blocks — the "real calendar" view.
+/// Pass `friend` to view a friend's shared calendar (privacy-filtered server-side).
 struct CalendarView: View {
+    var friend: Profile? = nil
+
     @EnvironmentObject var session: SessionStore
     @State private var events: [MyCalendarEvent] = []
-    @State private var selectedDay = Calendar.current.startOfDay(for: Date())
+    @State private var selectedDay = Calendar.current.startOfDay(for: WYDClock.now)
     @State private var isLoading = true
     @State private var selectedEvent: MyCalendarEvent?
 
@@ -14,7 +17,7 @@ struct CalendarView: View {
 
     private var days: [Date] {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
+        let today = calendar.startOfDay(for: WYDClock.now)
         return (0..<4).compactMap { calendar.date(byAdding: .day, value: $0, to: today) }
     }
 
@@ -65,7 +68,11 @@ struct CalendarView: View {
                 ContentUnavailableView {
                     Label("Free day", systemImage: "sun.max")
                 } description: {
-                    Text("No events this day. Join events from Browse, or sync a calendar from the You tab.")
+                    if let friend {
+                        Text("Nothing shared this day. \(friend.displayName) controls what you can see.")
+                    } else {
+                        Text("No events this day. Join events from Browse, or sync a calendar from the You tab.")
+                    }
                 }
             } else {
                 timeline
@@ -103,6 +110,7 @@ struct CalendarView: View {
             }
             .padding(.bottom, 40)
         }
+        .refreshable { await load() }
     }
 
     private struct Block {
@@ -165,6 +173,7 @@ struct CalendarView: View {
     }
 
     private func blockColor(for event: MyCalendarEvent) -> Color {
+        if event.category == "busy" { return Color(.systemGray3) }
         if event.source == "ics" || event.source == "eventkit" { return .indigo }
         if event.category == "personal" { return .gray }
         return EventCategory.color(for: event.category)
@@ -182,18 +191,24 @@ struct CalendarView: View {
         guard let userID = session.profile?.id else { return }
         isLoading = events.isEmpty
         let calendar = Calendar.current
-        let from = calendar.date(byAdding: .day, value: -1, to: Date())!
-        let to = calendar.date(byAdding: .day, value: 5, to: Date())!
+        let from = calendar.date(byAdding: .day, value: -1, to: WYDClock.now)!
+        let to = calendar.date(byAdding: .day, value: 5, to: WYDClock.now)!
         do {
-            events = try await APIClient.shared.rpc(
-                "wyd_my_calendar",
-                args: ["p_user": userID.uuidString, "p_from": from.wydISOString, "p_to": to.wydISOString],
-                as: MyCalendarEvent.self)
+            if let friend {
+                events = try await APIClient.shared.rpc(
+                    "wyd_friend_calendar",
+                    args: ["p_viewer": userID.uuidString, "p_friend": friend.id.uuidString,
+                           "p_from": from.wydISOString, "p_to": to.wydISOString],
+                    as: MyCalendarEvent.self)
+            } else {
+                events = try await APIClient.shared.rpc(
+                    "wyd_my_calendar",
+                    args: ["p_user": userID.uuidString, "p_from": from.wydISOString, "p_to": to.wydISOString],
+                    as: MyCalendarEvent.self)
+            }
         } catch { /* keep stale */ }
         isLoading = false
     }
-
-    func refresh() async { await load() }
 }
 
 struct CalendarEventDetail: View {
@@ -232,6 +247,7 @@ struct CalendarEventDetail: View {
         case "ics": return "Synced calendar"
         case "eventkit": return "Apple Calendar"
         case "personal": return "Personal event"
+        case "friend": return "Shared with you"
         default: return "WYD directory"
         }
     }
