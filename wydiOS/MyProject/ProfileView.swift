@@ -10,6 +10,7 @@ struct ProfileView: View {
     @State private var showAddFeed = false
     @State private var isSyncing = false
     @State private var syncMessage: String?
+    @AppStorage(WYDClock.enabledKey) private var conferenceMode = WYDClock.isConferenceMode
 
     var body: some View {
         NavigationStack {
@@ -109,7 +110,18 @@ struct ProfileView: View {
                     Toggle(isOn: $locationManager.sharingEnabled) {
                         Label("Share my location with circles", systemImage: "location.fill")
                     }
-                    Text("Only circles where your sharing level is Approximate Location or higher can see where you are.")
+                    Text("Only circles where you've turned on Approximate or Live Location can see where you are. Change it per circle in the Circles tab.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Section("Demo") {
+                    Toggle(isOn: $conferenceMode) {
+                        Label("Conference mode", systemImage: "clock.arrow.circlepath")
+                    }
+                    Text(conferenceMode
+                         ? "Replaying ETHGlobal Lisbon — the app's clock started at the opening keynote (Jul 24, 2026) and ticks forward from launch."
+                         : "Using the real date and time.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -189,7 +201,7 @@ struct ProfileView: View {
                 events.append(contentsOf: rows)
             }
             myEvents = events
-                .filter { $0.endsAt > Date() }
+                .filter { $0.endsAt > WYDClock.now }
                 .sorted { $0.startsAt < $1.startsAt }
         } catch { /* keep stale */ }
     }
@@ -203,8 +215,8 @@ struct NewEventSheet: View {
 
     @State private var title = ""
     @State private var venue = ""
-    @State private var startsAt = Date().addingTimeInterval(3600)
-    @State private var endsAt = Date().addingTimeInterval(7200)
+    @State private var startsAt = WYDClock.now.addingTimeInterval(3600)
+    @State private var endsAt = WYDClock.now.addingTimeInterval(7200)
     @State private var visibility = "private"
     @State private var isBusy = false
 
