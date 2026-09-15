@@ -50,9 +50,21 @@ struct EventMapView: View {
                             .overlay(SwiftUI.Circle().stroke(.white, lineWidth: 2))
                     }
                 }
+                UserAnnotation()
             }
             .mapStyle(.standard(pointsOfInterest: .excludingAll))
+            .mapControls {
+                MapUserLocationButton()
+                MapCompass()
+            }
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        Task { await load() }
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Toggle(isOn: $friendsOnly) {
                         Image(systemName: friendsOnly ? "person.2.fill" : "person.2")
@@ -70,7 +82,7 @@ struct EventMapView: View {
         guard let userID = session.profile?.id else { return }
         async let eventsTask = APIClient.shared.rpc(
             "wyd_recommend",
-            args: ["p_user": userID.uuidString, "p_now": Date().wydISOString, "p_limit": 50],
+            args: ["p_user": userID.uuidString, "p_now": WYDClock.now.wydISOString, "p_limit": 50],
             as: Recommendation.self)
         async let friendsTask = APIClient.shared.rpc(
             "wyd_friend_locations",
