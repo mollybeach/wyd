@@ -84,14 +84,23 @@ struct ConciergeView: View {
     private func rsvp(_ event: Recommendation) {
         guard let userID = session.profile?.id else { return }
         Task {
-            try? await APIClient.shared.insert("rsvps", row: [
-                "event_id": event.id.uuidString,
-                "user_id": userID.uuidString,
-                "status": "going"
-            ])
-            messages.append(ChatMessage(
-                isUser: false,
-                text: "You're in for **\(event.title)**! Your circles will see you're going. 🎉"))
+            do {
+                // delete + insert keeps "Join" idempotent if tapped twice
+                try await APIClient.shared.delete("rsvps", filter: [
+                    "event_id": event.id.uuidString, "user_id": userID.uuidString])
+                try await APIClient.shared.insert("rsvps", row: [
+                    "event_id": event.id.uuidString,
+                    "user_id": userID.uuidString,
+                    "status": "going"
+                ])
+                messages.append(ChatMessage(
+                    isUser: false,
+                    text: "You're in for **\(event.title)**! Your circles will see you're going. 🎉"))
+            } catch {
+                messages.append(ChatMessage(
+                    isUser: false,
+                    text: "Couldn't RSVP to **\(event.title)** (\(error.localizedDescription)). Try again from the Events tab."))
+            }
         }
     }
 }
