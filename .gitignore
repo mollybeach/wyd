@@ -1,6 +1,12 @@
 # macOS
 .DS_Store
 
+# Xcode
+xcuserdata/
+DerivedData/
+build/
+*.xcresult
+
 # LingCode / Cursor agent artifacts
 .lingcode/
 .cursor/skills/brainstorm/
