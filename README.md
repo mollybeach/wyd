@@ -6,7 +6,16 @@ Built at **ETHGlobal Lisbon 2026** as a native SwiftUI iOS app.
 
 **🌐 [mollybeach.github.io/wyd](https://mollybeach.github.io/wyd/)**
 
-<!-- Add screenshots to docs/ and link them here -->
+<p align="center">
+  <img src="docs/img/chat.png" width="150" alt="Concierge chat tab">
+  <img src="docs/img/map.png" width="150" alt="Live map tab">
+  <img src="docs/img/events.png" width="150" alt="Events tab">
+  <img src="docs/img/circles.png" width="150" alt="Circles tab">
+  <img src="docs/img/you.png" width="150" alt="You tab">
+</p>
+<p align="center">
+  <sub><b>wyd?</b> just ask &nbsp;·&nbsp; <b>Map</b> see the scene &nbsp;·&nbsp; <b>Events</b> find the move &nbsp;·&nbsp; <b>Circles</b> share on your terms &nbsp;·&nbsp; <b>You</b> all your plans</sub>
+</p>
 
 ---
 

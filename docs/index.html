@@ -87,38 +87,28 @@
     .lede strong { color: var(--ink); }
     .cta { display: flex; flex-wrap: wrap; gap: 12px; }
 
-    /* Phone */
-    .phone-stage { display: flex; justify-content: center; position: relative; }
-    .phone-stage::before {
-      content: ""; position: absolute; inset: 8% -4% -2% 8%; border-radius: 40px;
+    /* Stickers: real app screenshots with a die-cut white edge */
+    .sticker {
+      display: block; width: 100%; height: auto; user-select: none;
+      filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
+              drop-shadow(0 24px 32px rgba(30, 20, 0, .28));
+      transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+    }
+    .stage { position: relative; width: 100%; max-width: 540px; aspect-ratio: 1 / 1.08; margin: 0 auto; }
+    .stage::before {
+      content: ""; position: absolute; inset: 14% 2% 6% 2%; border-radius: 48px;
       background:
         linear-gradient(45deg, transparent 46%, var(--accent) 46% 54%, transparent 54%) 0 0 / 44px 44px,
         linear-gradient(-45deg, transparent 46%, var(--accent) 46% 54%, transparent 54%) 0 0 / 44px 44px;
-      opacity: .12; transform: rotate(4deg);
+      opacity: .12; transform: rotate(-3deg);
     }
-    .phone {
-      position: relative; width: 340px; max-width: 100%; background: var(--surface); border-radius: 46px;
-      border: 10px solid #111; box-shadow: var(--shadow); overflow: hidden;
-    }
-    .phone .island { width: 110px; height: 30px; background: #111; border-radius: 20px; margin: 8px auto 0; }
-    .phone .title { font-weight: 900; font-size: 22px; padding: 8px 18px 6px; }
-    .chat { padding: 4px 14px 16px; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px; line-height: 1.4; }
-    .bubble { padding: 9px 13px; border-radius: 18px; max-width: 85%; }
-    .me { align-self: flex-end; background: var(--accent); color: #fff; }
-    .bot { align-self: flex-start; background: var(--bubble); }
-    .bot ul { margin: 6px 0 0; padding: 0; list-style: none; }
-    .bot li { margin: 3px 0; }
-    .card { background: var(--surface-2); border-radius: 14px; padding: 11px 12px; align-self: flex-start; width: 88%; border: 1px solid var(--line); }
-    .card h4 { margin: 0; font-size: 14px; display: flex; gap: 6px; align-items: center; }
-    .card p { margin: 3px 0 7px; color: var(--muted); font-size: 12px; }
-    .card .join { display: inline-block; background: var(--accent); color: #fff; font-weight: 800; font-size: 12px; padding: 4px 12px; border-radius: 8px; }
-    .dot { width: 18px; height: 18px; border-radius: 6px; display: inline-grid; place-items: center; font-size: 10px; color: #fff; flex: none; }
-    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip { background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 11.5px; padding: 5px 10px; border-radius: 999px; }
-    .tabbar { display: flex; justify-content: space-around; border-top: 1px solid var(--line); padding: 10px 6px 16px; font-size: 10px; font-weight: 700; color: var(--muted); }
-    .tabbar span { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-    .tabbar .on { color: var(--accent); }
-    .tabbar i { font-style: normal; font-size: 17px; }
+    .stage .sticker { position: absolute; width: 46%; }
+    .stage .s-map { left: 0; top: 9%; transform: rotate(-9deg); }
+    .stage .s-events { right: 0; top: 9%; transform: rotate(8deg); }
+    .stage .s-chat { left: 25%; top: 0; width: 50%; z-index: 2; }
+    .stage:hover .s-map { transform: rotate(-12deg) translate(-12px, 6px); }
+    .stage:hover .s-events { transform: rotate(11deg) translate(12px, 6px); }
+    .stage:hover .s-chat { transform: translateY(-8px); }
 
     /* Sections */
     section { padding: 90px 0; }
@@ -133,21 +123,19 @@
     .scatter span:nth-child(odd) { transform: rotate(-2deg); }
     .scatter span:nth-child(3n) { transform: rotate(2.5deg); }
 
-    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-    .feature { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
-    .feature.wide { grid-column: span 2; }
-    .feature .icon { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-size: 22px; margin-bottom: 16px; }
-    .feature h3 { margin: 0 0 6px; font-size: 22px; letter-spacing: -.02em; }
-    .feature p { margin: 0; color: var(--muted); }
-    .feature .tag { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
-
-    /* Mini timeline */
-    .timeline { margin-top: 20px; display: grid; grid-template-columns: 44px 1fr; font-size: 12px; }
-    .timeline .hours div { height: 38px; color: var(--muted); font-weight: 700; }
-    .timeline .lane { position: relative; border-left: 1px solid var(--line); }
-    .timeline .lane::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, var(--line) 0 1px, transparent 1px 38px); opacity: .7; }
-    .blk { position: absolute; border-radius: 8px; color: #fff; padding: 4px 8px; font-weight: 800; line-height: 1.2; overflow: hidden; }
-    .blk small { display: block; font-weight: 600; opacity: .9; }
+    .gallery { display: grid; grid-template-columns: repeat(5, 1fr); gap: 30px; align-items: start; }
+    .shot { margin: 0; }
+    .shot:nth-child(even) { margin-top: 56px; }
+    .shot:nth-child(1) .sticker { transform: rotate(-4deg); }
+    .shot:nth-child(2) .sticker { transform: rotate(3deg); }
+    .shot:nth-child(3) .sticker { transform: rotate(-2deg); }
+    .shot:nth-child(4) .sticker { transform: rotate(4deg); }
+    .shot:nth-child(5) .sticker { transform: rotate(-3deg); }
+    .shot:hover .sticker { transform: rotate(0) translateY(-8px); }
+    .shot figcaption { margin-top: 26px; }
+    .shot .tab { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); }
+    .shot b { display: block; font-size: 19px; line-height: 1.2; letter-spacing: -.02em; margin: 2px 0 6px; }
+    .shot span.d { display: block; color: var(--muted); font-size: 15px; line-height: 1.45; }
 
     /* Privacy */
     .privacy .wrap { display: grid; grid-template-columns: .9fr 1.1fr; gap: 56px; align-items: center; }
@@ -195,7 +183,15 @@
 
     @media (max-width: 900px) {
       .hero .wrap, .problem .wrap, .privacy .wrap { grid-template-columns: 1fr; }
-      .features { grid-template-columns: 1fr 1fr; }
+      .gallery {
+        grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(220px, 58%);
+        overflow-x: auto; scroll-snap-type: x mandatory; gap: 22px;
+        margin: 0 -20px; padding: 12px 20px 24px; scrollbar-width: none;
+      }
+      .gallery::-webkit-scrollbar { display: none; }
+      .shot { scroll-snap-align: center; }
+      .shot:nth-child(even) { margin-top: 0; }
+      .stage { max-width: 440px; }
       .stack { grid-template-columns: 1fr 1fr; }
       .nav-links a:not(.btn) { display: none; }
       .hero { padding-top: 28px; }
@@ -203,10 +199,8 @@
     @media (max-width: 600px) {
       body { font-size: 16px; }
       .wrap { padding: 0 16px; }
-      .features { grid-template-columns: 1fr; }
-      .feature.wide { grid-column: auto; }
+      .gallery { margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
       section { padding: 64px 0; }
-      .phone { width: 100%; max-width: 340px; }
     }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
   </style>
@@ -239,33 +233,10 @@
         </div>
       </div>
 
-      <div class="phone-stage">
-        <div class="phone" role="img" aria-label="The wyd concierge chat answering where your friends are">
-          <div class="island"></div>
-          <div class="title">wyd?</div>
-          <div class="chat">
-            <div class="bubble me">where is everyone?</div>
-            <div class="bubble bot">
-              Here's where your people are:
-              <ul>
-                <li>• <b>Alice</b>, Opening Keynote (right now)</li>
-                <li>• <b>Bob</b>, Opening Keynote (right now)</li>
-                <li>• <b>Diego</b>, Sui Dev Meetup (next, in 2h 41m)</li>
-              </ul>
-            </div>
-            <div class="bubble me">find an event everyone can make</div>
-            <div class="bubble bot">Your best bet is <b>AI x Crypto Happy Hour</b> at Pensão Amor. 5 of your friends are going.</div>
-            <div class="card">
-              <h4><span class="dot" style="background:var(--side)">✦</span>AI x Crypto Happy Hour</h4>
-              <p>Pensão Amor · Lisbon<br>👥 Alice, Bob, Diego +2 more going</p>
-              <span class="join">Join</span>
-            </div>
-            <div class="chips"><span class="chip">What's trending?</span><span class="chip">Networking nearby</span></div>
-          </div>
-          <div class="tabbar">
-            <span class="on"><i>💬</i>wyd?</span><span><i>🗺️</i>Map</span><span><i>📅</i>Events</span><span><i>👥</i>Circles</span><span><i>👤</i>You</span>
-          </div>
-        </div>
+      <div class="stage">
+        <img class="sticker s-map" src="img/map.png" width="441" height="882" alt="wyd Live Map tab showing events around Lisbon's waterfront">
+        <img class="sticker s-events" src="img/events.png" width="441" height="882" alt="wyd Events tab with recommendations and friends going">
+        <img class="sticker s-chat" src="img/chat.png" width="441" height="882" alt="wyd concierge chat with suggestions like wyd tonight and where is everyone">
       </div>
     </div>
   </header>
@@ -290,39 +261,27 @@
       <h2>Everything you need to find the move.</h2>
       <p class="sub">A native SwiftUI app. It knows the event directory, your friends' plans, and your own calendar, and turns them into an answer.</p>
 
-      <div class="features">
-        <div class="feature wide">
-          <div class="icon" style="background:var(--accent-soft)">💬</div>
-          <span class="tag">wyd? tab</span>
-          <h3>A concierge you can just ask</h3>
-          <p>"wyd tonight?" "What's trending?" "Networking events nearby." "Who's going to Sunset Boat Party?" The concierge answers from live data: friends' RSVPs, walking distance, and momentum. Every answer comes with event cards you can join in one tap.</p>
-        </div>
-        <div class="feature">
-          <div class="icon" style="background:color-mix(in srgb, var(--meetup) 18%, transparent)">🗺️</div>
-          <span class="tag">Map</span>
-          <h3>Live map</h3>
-          <p>Events colored by type, friend-count badges on each pin, and the friends who chose to share where they are.</p>
-        </div>
-        <div class="feature">
-          <div class="icon" style="background:color-mix(in srgb, var(--networking) 16%, transparent)">👥</div>
-          <span class="tag">Circles</span>
-          <h3>Circles, not followers</h3>
-          <p>Group people the way you actually know them, like your hackathon team or old coworkers. Tap a friend to see the calendar they share with you.</p>
-        </div>
-        <div class="feature wide">
-          <div class="icon" style="background:color-mix(in srgb, var(--workshop) 16%, transparent)">📅</div>
-          <span class="tag">Events</span>
-          <h3>A real calendar, not a list</h3>
-          <p>Recommendations ranked by where your friends are going, plus a day timeline that merges your RSVPs, personal plans, and synced calendars.</p>
-          <div class="timeline" aria-hidden="true">
-            <div class="hours"><div>6 PM</div><div>7 PM</div><div>8 PM</div><div>9 PM</div></div>
-            <div class="lane">
-              <div class="blk" style="top:2px;height:34px;left:6px;width:calc(50% - 9px);background:var(--talk)">Opening Keynote<small>6:11 – 7:11</small></div>
-              <div class="blk" style="top:2px;height:72px;left:calc(50% + 3px);width:calc(50% - 9px);background:#5856d6">Dinner w/ investors<small>synced · private</small></div>
-              <div class="blk" style="top:78px;height:72px;left:6px;width:calc(100% - 12px);background:var(--meetup)">Sui Developer Meetup<small>Hub Criativo do Beato · 3 friends</small></div>
-            </div>
-          </div>
-        </div>
+      <div class="gallery">
+        <figure class="shot">
+          <img class="sticker" src="img/chat.png" width="441" height="882" loading="lazy" alt="Concierge chat tab">
+          <figcaption><span class="tab">wyd?</span><b>Just ask</b><span class="d">"wyd tonight?" "Where is everyone?" The concierge answers from live data, with events you can join in one tap.</span></figcaption>
+        </figure>
+        <figure class="shot">
+          <img class="sticker" src="img/map.png" width="441" height="882" loading="lazy" alt="Live map tab">
+          <figcaption><span class="tab">Map</span><b>See the scene</b><span class="d">Events colored by type, friend counts on every pin, and friends who chose to share where they are.</span></figcaption>
+        </figure>
+        <figure class="shot">
+          <img class="sticker" src="img/events.png" width="441" height="882" loading="lazy" alt="Events tab with recommendations">
+          <figcaption><span class="tab">Events</span><b>Find the move</b><span class="d">Recommendations ranked by where your friends are going, plus a real calendar of your plans.</span></figcaption>
+        </figure>
+        <figure class="shot">
+          <img class="sticker" src="img/circles.png" width="441" height="882" loading="lazy" alt="Circles tab with per-friend sharing toggles">
+          <figcaption><span class="tab">Circles</span><b>Share on your terms</b><span class="d">Choose what each circle sees, hide your plans from one friend, and peek at calendars shared with you.</span></figcaption>
+        </figure>
+        <figure class="shot">
+          <img class="sticker" src="img/you.png" width="441" height="882" loading="lazy" alt="You tab with schedule and connected calendars">
+          <figcaption><span class="tab">You</span><b>All your plans</b><span class="d">Your schedule, personal events, and Google, Luma, or Apple calendars in one place.</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
