@@ -33,14 +33,15 @@ struct Envelope<T: Decodable>: Decodable {
     let data: T?
     let error: String?
 
-    private enum CodingKeys: String, CodingKey { case ok, data, error }
+    private enum CodingKeys: String, CodingKey { case ok, data, error, message }
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         ok = (try? c.decode(Bool.self, forKey: .ok)) ?? false
         data = try? c.decode(T.self, forKey: .data)
-        if let message = try? c.decode(String.self, forKey: .error) {
-            error = message
+        if let code = try? c.decode(String.self, forKey: .error) {
+            // Cloud errors look like {"error":"cloud_error","message":"table not found"}
+            error = (try? c.decode(String.self, forKey: .message)) ?? code
         } else if let object = try? c.decode([String: String].self, forKey: .error) {
             error = object["message"] ?? object.values.joined(separator: ", ")
         } else {
