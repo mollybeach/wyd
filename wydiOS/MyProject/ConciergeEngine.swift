@@ -18,7 +18,7 @@ enum ConciergeEngine {
         "Networking events nearby"
     ]
 
-    private enum Intent {
+    enum Intent: Equatable {
         case wydTonight
         case friendsNow
         case trending
@@ -30,7 +30,7 @@ enum ConciergeEngine {
 
     static func respond(to text: String, userID: UUID, reference: CLLocation?) async -> ConciergeReply {
         let intent = parse(text)
-        let now = Date()
+        let now = WYDClock.now
 
         do {
             switch intent {
@@ -107,7 +107,7 @@ enum ConciergeEngine {
                     let meters = origin.distance(from: CLLocation(latitude: lat, longitude: lng))
                     return (rec, Int(meters / 80)) // ~80 m per walking minute
                 }.sorted { $0.1 < $1.1 }
-                guard let first = withDistance.first else {
+                guard !withDistance.isEmpty else {
                     return ConciergeReply(text: "Couldn't find anything matching that nearby. Try browsing the Events tab.")
                 }
                 let lines = withDistance.prefix(3).map { rec, minutes in
@@ -143,7 +143,7 @@ enum ConciergeEngine {
 
     // MARK: - Intent parsing
 
-    private static func parse(_ raw: String) -> Intent {
+    static func parse(_ raw: String) -> Intent {
         let text = raw.lowercased()
 
         if text.contains("who") && (text.contains("going") || text.contains("at")) {
