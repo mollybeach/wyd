@@ -58,10 +58,11 @@ enum ICSImporter {
     // MARK: - ICS parsing
 
     static func parse(ics: String) -> [ParsedICSEvent] {
-        // Unfold continuation lines (lines starting with space/tab)
+        // Unfold continuation lines (lines starting with space/tab). Normalize CRLF first:
+        // splitting on .newlines turns "\r\n" into an extra empty line, which breaks unfolding.
         var lines: [String] = []
-        for rawLine in ics.components(separatedBy: .newlines) {
-            let line = rawLine.hasSuffix("\r") ? String(rawLine.dropLast()) : rawLine
+        let normalized = ics.replacingOccurrences(of: "\r\n", with: "\n").replacingOccurrences(of: "\r", with: "\n")
+        for line in normalized.components(separatedBy: "\n") {
             if (line.hasPrefix(" ") || line.hasPrefix("\t")), !lines.isEmpty {
                 lines[lines.count - 1] += String(line.dropFirst())
             } else {
